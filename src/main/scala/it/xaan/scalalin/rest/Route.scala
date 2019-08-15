@@ -53,7 +53,10 @@ abstract class Route[T](
 
   def respond(code: Int, json: Any, headers: Map[String, String] = Map())(implicit ctx: Context): Unit = {
     ctx.status(code)
-      .json(json)
+      .json(json match {
+        case str: String => str
+        case _ => json
+      })
       .header("Content-Type", "application/json")
     headers.foreachEntry { (key, value) => ctx.header(key, value) }
   }
