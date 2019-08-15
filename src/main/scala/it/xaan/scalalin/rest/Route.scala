@@ -3,6 +3,7 @@ package it.xaan.scalalin.rest
 import io.javalin.apibuilder.ApiBuilder._
 import io.javalin.apibuilder.EndpointGroup
 import io.javalin.http.Context
+import io.javalin.plugin.json.JavalinJson
 import it.xaan.scalalin.UserError
 import it.xaan.scalalin.rest.RouteCheck.Check
 import it.xaan.scalalin.util.Util
@@ -48,14 +49,13 @@ abstract class Route[T](
 
   def put(implicit ctx: Context): Unit = respondMap(405, Map("error" -> "Method not allowed"))(ctx)
 
-
   def respondMap(code: Int, json: Map[String, Any], headers: Map[String, String] = Map())(implicit ctx: Context): Unit = respond(code, Util.toJavaMap(json), headers)
 
   def respond(code: Int, json: Any, headers: Map[String, String] = Map())(implicit ctx: Context): Unit = {
     ctx.status(code)
-      .json(json match {
+      .result(json match {
         case str: String => str
-        case _ => json
+        case _ => JavalinJson.toJson(json)
       })
       .header("Content-Type", "application/json")
     headers.foreachEntry { (key, value) => ctx.header(key, value) }
