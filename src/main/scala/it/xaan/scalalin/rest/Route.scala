@@ -36,17 +36,17 @@ abstract class Route[T](
       }
     }
 
-  final def head(ctx: Context): Unit = respond(200, Map())(ctx)
+  final def head(implicit ctx: Context): Unit = respond(200, Map())(ctx)
 
-  def get(ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
+  def get(implicit ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
 
-  def post(ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
+  def post(implicit ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
 
-  def patch(ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
+  def patch(implicit ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
 
-  def delete(ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
+  def delete(implicit ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
 
-  def put(ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
+  def put(implicit ctx: Context): Unit = respond(405, Map("error" -> "Method not allowed"))(ctx)
 
 
   def respond(code: Int, json: Map[String, Any], headers: Map[String, String] = Map())(implicit ctx: Context): Unit = {
