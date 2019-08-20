@@ -26,7 +26,7 @@ abstract class Route[T](
           case ex: Exception => respondMap(code = 500, json = Map("error" -> "Internal error."))(ctx)
             ex.printStackTrace()
         }
-      case Success(_) => ctx.method().toUpperCase() match {
+      case Success(_) => Try(ctx.method().toUpperCase() match {
         case "GET" => get(ctx)
         case "POST" => post(ctx)
         case "HEAD" => head(ctx)
@@ -34,6 +34,14 @@ abstract class Route[T](
         case "DELETE" => delete(ctx)
         case "PATCH" => patch(ctx)
         case _ =>
+      }) match {
+        case Failure(exception) =>
+          exception match {
+            case ue: UserError => respondMap(ue.code, ue.json, ue.headers)(ctx)
+            case ex: Exception => respondMap(code = 500, json = Map("error" -> "Internal error."))(ctx)
+              ex.printStackTrace()
+          }
+        case Success(_) => //ignore, we're cool
       }
     }
 
