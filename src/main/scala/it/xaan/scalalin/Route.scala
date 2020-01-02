@@ -8,7 +8,7 @@ import play.api.libs.json.{JsNull, JsObject, Json}
 
 import scala.util.{Failure, Success, Try}
 
-abstract class RouteNew(val path: String, val app: Javalin) {
+abstract class Route(val path: String, val app: Javalin) {
   def call(ctx: Context): Unit = {
     before(ctx) match {
       case Failure(exception) =>
@@ -60,8 +60,8 @@ abstract class RouteNew(val path: String, val app: Javalin) {
     }
 }
 
-object RouteNew {
-  def getEndpoints[T](routes: Seq[RouteNew]): EndpointGroup =
+object Route {
+  def getEndpoints[T](routes: Seq[Route]): EndpointGroup =
     () => {
       routes.foreach { route =>
         path(route.path, () => {
